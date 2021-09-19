@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  java-app:
+    build:
+      context: ./
+      dockerfile: ./config/java/Dockerfile
+    container_name: metrics-java-app
+    ports:
+    - 8099:8080
+
+  grafana:
+    build: './config/grafana'
+    container_name: metrics-grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+#    volumes:
+#      - ./grafana:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus
+    container_name: metrics-prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#      - ./prometheus:/prometheus
